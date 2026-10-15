@@ -1,0 +1,500 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABSENSI BY SULTAN</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #09090f;
+  color: white;
+  padding: 18px;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+}
+
+header {
+  text-align: center;
+  padding: 25px 10px;
+  border: 1px solid #ff4fc8;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #24102e, #101020);
+  box-shadow: 0 0 20px #ff26c344;
+}
+
+header h1 {
+  color: #ff61d2;
+  margin-bottom: 10px;
+}
+
+header p {
+  color: #c9c9d6;
+  font-size: 14px;
+}
+
+.clock {
+  margin-top: 15px;
+  color: #71ffe0;
+  font-weight: bold;
+}
+
+.card {
+  background: #14141e;
+  border: 1px solid #333346;
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 18px;
+}
+
+h2 {
+  color: #ff75d9;
+  font-size: 19px;
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  margin: 12px 0 7px;
+  color: #ddddeb;
+  font-size: 14px;
+}
+
+input, select {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #414158;
+  background: #0c0c15;
+  color: white;
+  border-radius: 10px;
+  outline: none;
+  font-size: 15px;
+}
+
+input:focus, select:focus {
+  border-color: #ff61d2;
+}
+
+button {
+  width: 100%;
+  padding: 13px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #ff35bd, #8c5cff);
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: .6;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.stat {
+  background: #1c1c2a;
+  padding: 17px 10px;
+  border-radius: 13px;
+  text-align: center;
+  border: 1px solid #333346;
+}
+
+.stat strong {
+  display: block;
+  font-size: 27px;
+  margin-bottom: 7px;
+  color: #70ffe0;
+}
+
+.stat span {
+  font-size: 13px;
+  color: #c9c9d6;
+}
+
+.search {
+  margin-bottom: 12px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 520px;
+}
+
+th, td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #303040;
+  text-align: left;
+  font-size: 13px;
+}
+
+th {
+  color: #ff75d9;
+}
+
+.badge {
+  display: inline-block;
+  padding: 5px 8px;
+  border-radius: 7px;
+  background: #292940;
+}
+
+.status {
+  color: #71ffe0;
+}
+
+.notice {
+  color: #bdbdcc;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 12px;
+}
+
+.empty {
+  color: #aaaabc;
+  text-align: center;
+  padding: 22px;
+}
+
+footer {
+  text-align: center;
+  padding: 22px 5px;
+  color: #77778c;
+  font-size: 12px;
+}
+
+@media (min-width: 600px) {
+  .stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+  <h1>✦ ABSENSI BY SULTAN ✦</h1>
+  <p>Dashboard Absensi Siswa Online</p>
+  <div class="clock" id="clock">Memuat waktu...</div>
+</header>
+
+<section class="card">
+  <h2>📝 Form Absensi</h2>
+
+  <form id="attendanceForm">
+    <label for="studentName">Nama siswa</label>
+    <input
+      id="studentName"
+      type="text"
+      placeholder="Masukkan nama kamu"
+      maxlength="60"
+      required
+    >
+
+    <label for="attendanceStatus">Status kehadiran</label>
+    <select id="attendanceStatus" required>
+      <option value="Hadir">✅ Hadir</option>
+      <option value="Izin">📝 Izin</option>
+      <option value="Sakit">🤒 Sakit</option>
+      <option value="Alpha">❌ Alpha</option>
+    </select>
+
+    <button id="submitButton" type="submit">
+      KIRIM ABSENSI 🚀
+    </button>
+  </form>
+
+  <p class="notice" id="message">
+    Isi nama dan pilih status untuk mengirim absensi.
+  </p>
+</section>
+
+<section class="card">
+  <h2>📊 Dashboard Hari Ini</h2>
+  <div class="stats">
+    <div class="stat">
+      <strong id="totalCount">0</strong>
+      <span>Total absensi</span>
+    </div>
+    <div class="stat">
+      <strong id="presentCount">0</strong>
+      <span>Hadir</span>
+    </div>
+    <div class="stat">
+      <strong id="permissionCount">0</strong>
+      <span>Izin</span>
+    </div>
+    <div class="stat">
+      <strong id="sickCount">0</strong>
+      <span>Sakit</span>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>📋 Riwayat Absensi</h2>
+
+  <input
+    class="search"
+    id="searchInput"
+    type="search"
+    placeholder="Cari nama siswa..."
+  >
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nama</th>
+          <th>Status</th>
+          <th>Tanggal</th>
+          <th>Jam WIB</th>
+        </tr>
+      </thead>
+      <tbody id="attendanceRows">
+        <tr>
+          <td colspan="4" class="empty">
+            Menghubungkan database...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="notice">
+    Riwayat akan diperbarui otomatis jika database online
+    sudah dikonfigurasi.
+  </p>
+</section>
+
+<footer>
+  © 2026 ABSENSI BY SULTAN • Website Absensi Siswa
+</footer>
+
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<script>
+// ============================================
+// ISI DENGAN KONFIGURASI FIREBASE MILIK KAMU
+// Firebase Console > Project settings > Your apps
+// ============================================
+
+const firebaseConfig = {
+  apiKey: "ISI_API_KEY",
+  authDomain: "ISI_PROJECT_ID.firebaseapp.com",
+  databaseURL: "ISI_DATABASE_URL",
+  projectId: "ISI_PROJECT_ID",
+  appId: "ISI_APP_ID"
+};
+
+const isConfigured =
+  firebaseConfig.apiKey !== "ISI_API_KEY" &&
+  firebaseConfig.projectId !== "ISI_PROJECT_ID" &&
+  firebaseConfig.databaseURL !== "ISI_DATABASE_URL" &&
+  firebaseConfig.appId !== "ISI_APP_ID";
+
+let db = null;
+let allRecords = [];
+
+const $ = id => document.getElementById(id);
+
+function getWIBParts() {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Jakarta",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23"
+  }).formatToParts(new Date());
+
+  const result = {};
+  parts.forEach(part => result[part.type] = part.value);
+  return result;
+}
+
+function getWIBDateTime() {
+  const p = getWIBParts();
+  return {
+    date: `${p.year}-${p.month}-${p.day}`,
+    time: `${p.hour}:${p.minute}:${p.second}`
+  };
+}
+
+function updateClock() {
+  const p = getWIBDateTime();
+  $("clock").textContent =
+    `📅 ${p.date} • 🕒 ${p.time} WIB`;
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+function renderRecords() {
+  const today = getWIBDateTime().date;
+  const todayRecords = allRecords.filter(r => r.date === today);
+
+  $("totalCount").textContent = todayRecords.length;
+  $("presentCount").textContent =
+    todayRecords.filter(r => r.status === "Hadir").length;
+  $("permissionCount").textContent =
+    todayRecords.filter(r => r.status === "Izin").length;
+  $("sickCount").textContent =
+    todayRecords.filter(r => r.status === "Sakit").length;
+
+  const search = $("searchInput").value.trim().toLowerCase();
+
+  const visible = [...allRecords]
+    .filter(r => r.name.toLowerCase().includes(search))
+    .sort((a, b) =>
+      `${b.date} ${b.time}`.localeCompare(`${a.date} ${a.time}`)
+    );
+
+  if (!visible.length) {
+    $("attendanceRows").innerHTML = `
+      <tr><td colspan="4" class="empty">
+        Belum ada data absensi.
+      </td></tr>`;
+    return;
+  }
+
+  $("attendanceRows").innerHTML = visible.map(r => `
+    <tr>
+      <td>${escapeHTML(r.name)}</td>
+      <td><span class="badge">${escapeHTML(r.status)}</span></td>
+      <td>${escapeHTML(r.date)}</td>
+      <td class="status">${escapeHTML(r.time)} WIB</td>
+    </tr>
+  `).join("");
+}
+
+$("searchInput").addEventListener("input", renderRecords);
+
+$("attendanceForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const name = $("studentName").value.trim();
+  const status = $("attendanceStatus").value;
+
+  if (!name) {
+    $("message").textContent = "Masukkan nama siswa terlebih dahulu.";
+    return;
+  }
+
+  if (!isConfigured || !db) {
+    $("message").textContent =
+      "Firebase belum dikonfigurasi. Isi firebaseConfig terlebih dahulu.";
+    return;
+  }
+
+  const button = $("submitButton");
+  button.disabled = true;
+  button.textContent = "Mengirim...";
+
+  try {
+    const now = getWIBDateTime();
+
+    await db.ref("absensiSiswa").push({
+      name: name,
+      status: status,
+      date: now.date,
+      time: now.time,
+      createdAt: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    $("message").textContent =
+      "Absensi berhasil dikirim dan akan terlihat oleh pengguna lain.";
+    $("studentName").value = "";
+  } catch (error) {
+    console.error(error);
+    $("message").textContent =
+      "Gagal mengirim absensi. Periksa koneksi dan aturan Firebase.";
+  } finally {
+    button.disabled = false;
+    button.textContent = "KIRIM ABSENSI 🚀";
+  }
+});
+
+if (isConfigured) {
+  try {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+
+    db.ref("absensiSiswa").on("value", snapshot => {
+      allRecords = [];
+
+      snapshot.forEach(child => {
+        const value = child.val();
+        if (value && value.name && value.date) {
+          allRecords.push({
+            name: String(value.name),
+            status: String(value.status || "Hadir"),
+            date: String(value.date),
+            time: String(value.time || "--:--:--")
+          });
+        }
+      });
+
+      renderRecords();
+      $("message").textContent =
+        "🟢 Database terhubung. Data diperbarui secara langsung.";
+    }, error => {
+      console.error(error);
+      $("message").textContent =
+        "Database tidak dapat diakses. Periksa aturan Firebase.";
+    });
+  } catch (error) {
+    console.error(error);
+    $("message").textContent =
+      "Konfigurasi Firebase tidak valid.";
+  }
+} else {
+  $("attendanceRows").innerHTML = `
+    <tr><td colspan="4" class="empty">
+      Konfigurasikan Firebase untuk mengaktifkan absensi online.
+    </td></tr>`;
+}
+</script>
+</body>
+</html>
